@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 14:56:05 by nayache           #+#    #+#             */
-/*   Updated: 2021/03/24 19:15:53 by nayache          ###   ########.fr       */
+/*   Updated: 2021/03/24 19:37:19 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,26 @@ void	print_token(t_token *list)
 	ft_putstr("------------------------------------------------------------\n");
 }
 
-t_token	*init_token(void)
+t_token	*init_token(char *insert)
 {
 	t_token *token;
 	
 	if ((token = malloc(sizeof(t_token))) == NULL)
 		return (NULL);
-	token->data = NULL;
+	if (insert == NULL)
+		token->data = NULL;
+	else
+		if ((token->data = ft_strdup(insert)) == NULL)
+			return (NULL);
 	token->next = NULL;
 	return (token);
+}
+
+void	lst_push_back(t_token *list, t_token *new)
+{
+	while (list->next != NULL)
+		list = list->next;
+	list->next = new;
 }
 
 int		add_token(t_token *list, char *item, int size)
@@ -53,14 +64,9 @@ int		add_token(t_token *list, char *item, int size)
 		item[size] = tmp;
 		return (0);
 	}
-	if ((new = (t_token *)malloc(sizeof(t_token))) == NULL)
+	if ((new = init_token(item)) == NULL)
 		return (-1);
-	while (list->next != NULL)
-		list = list->next;
-	list->next = new;
-	if ((new->data = ft_strdup(item)) == NULL)
-		return (-1);
-	new->next = NULL;
+	lst_push_back(list, new);
 	item[size] = tmp;
 	return (0);
 }

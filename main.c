@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 17:11:30 by nayache           #+#    #+#             */
-/*   Updated: 2021/03/24 19:15:22 by nayache          ###   ########.fr       */
+/*   Updated: 2021/03/24 19:34:04 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int		main(int ac, char **av, char **env)
 			error();
 			return (EXIT_FAILURE);
 		}
-		if ((token = init_token()) == NULL || engine(&buffer, token, env) == -1)
+		if (!(token = init_token(NULL)) || engine(&buffer, token, env) == -1)
 			error();
 		else
 			print_token(token);						// executer mes commandes.

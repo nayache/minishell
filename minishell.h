@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 17:11:51 by nayache           #+#    #+#             */
-/*   Updated: 2021/03/24 18:48:15 by nayache          ###   ########.fr       */
+/*   Updated: 2021/03/24 19:37:17 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,9 @@ typedef struct	s_token
 
 void			print_token(t_token *list);
 void			free_token(t_token *list);
-t_token			*init_token(void);
+t_token			*init_token(char *insert);
 int				add_token(t_token *list, char *item, int size);
+void			lst_push_back(t_token *list, t_token *new_token);
 void			free_token(t_token *list);
 int				check_special_char(char c);
 int				is_space(char c);
