@@ -6,13 +6,13 @@
 /*   By: nayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/27 16:57:01 by nayache           #+#    #+#             */
-/*   Updated: 2021/03/01 13:02:47 by nayache          ###   ########.fr       */
+/*   Updated: 2021/03/24 20:05:51 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		work(char **stock, char **line, char *neww)
+static int	work(char **stock, char **line, char *neww)
 {
 	char	*tmp;
 
@@ -30,7 +30,8 @@ int		work(char **stock, char **line, char *neww)
 	return (1);
 }
 
-int		work_zero(char **stock, char **line)
+
+static int	work_zero(char **stock, char **line)
 {
 	if (*stock != NULL)
 	{
@@ -48,7 +49,19 @@ int		work_zero(char **stock, char **line)
 	return (1);
 }
 
-int		get_next_line(int fd, char **line)
+static int	work_less(char **stock, char **line, int value)
+{
+	if ((*stock)[value - 1] == '\n')
+	{
+		(*stock)[value - 1] = '\0';
+		return (work_zero(stock, line));
+	}
+	if (work_zero(stock, line) == -1)
+		return (-1);
+	return (0);
+}
+
+int			get_next_line(int fd, char **line)
 {
 	static char		*stock = NULL;
 	char			buf[10000 + 1];
@@ -67,11 +80,8 @@ int		get_next_line(int fd, char **line)
 		if (stock != NULL)
 			free(stock);
 		stock = tmp;
-		if (value < 10000 && stock[value - 1] == '\n')
-		{
-			stock[value - 1] = '\0';
-			return (work_zero(&stock, line));
-		}
+		if (value < 10000)
+			return (work_less(&stock, line, value));
 		return (get_next_line(fd, line));
 	}
 	if (value == 0)
