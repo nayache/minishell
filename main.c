@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 17:11:30 by nayache           #+#    #+#             */
-/*   Updated: 2021/03/24 19:34:04 by nayache          ###   ########.fr       */
+/*   Updated: 2021/03/25 11:39:48 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,15 @@ static void	error(void)
 		perror("\e[1;4;31mERROR\e[0;38m");
 }
 
+int			parsing(t_token *token)
+{
+	return (0);	
+}
+
 static int	engine(char **buffer, t_token *token, char **env)
 {
+	t_cmd *cmd;
+
 	if (ft_strcmp(*buffer, "exit") == 0)
 	{
 		free(*buffer);
@@ -30,7 +37,15 @@ static int	engine(char **buffer, t_token *token, char **env)
 	if (lexing(*buffer, token) == -1)
 		return (-1);
 	free_buf(buffer);
+	if ((cmd = init_cmd(NULL)) == NULL)
+		return (-1);
 	// parser
+	if (parsing(token) == -1)
+	{
+		free_cmd(cmd);
+		return (-1);
+	}
+	free_cmd(cmd);
 	return (0);
 }
 
@@ -51,7 +66,7 @@ int		main(int ac, char **av, char **env)
 		if (!(token = init_token(NULL)) || engine(&buffer, token, env) == -1)
 			error();
 		else
-			print_token(token);						// executer mes commandes.
+			print_token(token);				// executer mes commandes.
 		free_buf(&buffer);
 		free_token(token);
 	}

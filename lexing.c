@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 18:42:19 by nayache           #+#    #+#             */
-/*   Updated: 2021/03/24 19:16:02 by nayache          ###   ########.fr       */
+/*   Updated: 2021/03/24 20:08:59 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static int	get_size_occur(char *str)
 int			lexing(char *buf, t_token *token)
 {
 	int	size;
-	
+
 	delete_start_space(buf);
 	while (*buf != '\0')
 	{

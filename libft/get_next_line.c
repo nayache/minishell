@@ -6,7 +6,7 @@
 /*   By: nayache <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/27 16:57:01 by nayache           #+#    #+#             */
-/*   Updated: 2021/03/24 20:05:51 by nayache          ###   ########.fr       */
+/*   Updated: 2021/03/24 20:08:00 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ static int	work(char **stock, char **line, char *neww)
 	free(tmp);
 	return (1);
 }
-
 
 static int	work_zero(char **stock, char **line)
 {

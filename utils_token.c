@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 14:56:05 by nayache           #+#    #+#             */
-/*   Updated: 2021/03/24 19:37:19 by nayache          ###   ########.fr       */
+/*   Updated: 2021/03/25 11:31:21 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,16 @@ void	print_token(t_token *list)
 t_token	*init_token(char *insert)
 {
 	t_token *token;
-	
+
 	if ((token = malloc(sizeof(t_token))) == NULL)
 		return (NULL);
 	if (insert == NULL)
 		token->data = NULL;
 	else
+	{
 		if ((token->data = ft_strdup(insert)) == NULL)
 			return (NULL);
+	}
 	token->next = NULL;
 	return (token);
 }
@@ -54,7 +56,7 @@ int		add_token(t_token *list, char *item, int size)
 {
 	t_token *new;
 	char	tmp;
-	
+
 	tmp = item[size];
 	item[size] = '\0';
 	if (list->data == NULL)
@@ -74,7 +76,9 @@ int		add_token(t_token *list, char *item, int size)
 void	free_token(t_token *list)
 {
 	t_token *tmp;
+	t_token *head;
 
+	head = list;
 	while (list != NULL)
 	{
 		if (list->data != NULL)
@@ -83,4 +87,5 @@ void	free_token(t_token *list)
 		list = list->next;
 		free(tmp);
 	}
+	head = NULL;
 }
