@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 14:56:05 by nayache           #+#    #+#             */
-/*   Updated: 2021/03/25 11:31:21 by nayache          ###   ########.fr       */
+/*   Updated: 2021/03/26 20:21:29 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,10 @@
 
 void	print_token(t_token *list)
 {
+	const char	type[10][15] = {"Text", "Literally",
+		"Dirin", "Dirout", "Pipe", "Open_round", "Close_round", "Dollar",
+		"Equal_assign", "End_cmd"};
+	
 	ft_putstr("----------------------print-token---------------------------\n");
 	if (list->data == NULL)
 		ft_putstr("No tokens.\n");
@@ -21,7 +25,7 @@ void	print_token(t_token *list)
 	{
 		if (list->data != NULL)
 		{
-			printf("[%s]\n", list->data);
+			printf("%s : [%s]\n", type[list->type], list->data);
 		}
 		list = list->next;
 	}
@@ -52,24 +56,31 @@ void	lst_push_back(t_token *list, t_token *new)
 	list->next = new;
 }
 
-int		add_token(t_token *list, char *item, int size)
+int		add_token(t_token *list, char *item, char first, int size)
 {
-	t_token *new;
-	char	tmp;
+	t_token		*new;
+	t_tokentype value;
+	char		tmp;
 
+	if (first == QUOTE || first == DQUOTE)
+		item++;
 	tmp = item[size];
 	item[size] = '\0';
+	value = get_type(first);
 	if (list->data == NULL)
 	{
 		if ((list->data = ft_strdup(item)) == NULL)
 			return (-1);
+		list->type = value;
 		item[size] = tmp;
 		return (0);
 	}
 	if ((new = init_token(item)) == NULL)
 		return (-1);
 	lst_push_back(list, new);
-	item[size] = tmp;
+	new->type = value;
+	if (tmp != QUOTE || tmp != DQUOTE)
+		item[size] = tmp;
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 17:11:30 by nayache           #+#    #+#             */
-/*   Updated: 2021/03/25 11:39:48 by nayache          ###   ########.fr       */
+/*   Updated: 2021/03/25 13:57:36 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	error(void)
 		perror("\e[1;4;31mERROR\e[0;38m");
 }
 
-int			parsing(t_token *token)
+int			parsing(t_token *token, t_cmd *cmd)
 {
 	return (0);	
 }
@@ -40,7 +40,7 @@ static int	engine(char **buffer, t_token *token, char **env)
 	if ((cmd = init_cmd(NULL)) == NULL)
 		return (-1);
 	// parser
-	if (parsing(token) == -1)
+	if (parsing(token, cmd) == -1)
 	{
 		free_cmd(cmd);
 		return (-1);

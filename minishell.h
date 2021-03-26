@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 17:11:51 by nayache           #+#    #+#             */
-/*   Updated: 2021/03/25 11:43:04 by nayache          ###   ########.fr       */
+/*   Updated: 2021/03/26 20:21:13 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,32 @@
 
 # define QUOTE 39
 # define DQUOTE 34
+# define DIRIN '<'
+# define DIROUT '>'
+# define PIPE '|'
 # define OPEN_ROUND '('
 # define CLOSE_ROUND ')'
 # define DOLLAR '$'
-# define DIR_IN '<'
-# define DIR_OUT '>'
-# define PIPE '|'
-# define END_CMD ';'
 # define EQUAL_ASSIGN '='
+# define END_CMD ';'
+
+typedef enum	e_tokentype
+{
+	Text,
+	Literally,
+	Dirin,
+	Dirout,
+	Pipe,
+	Open_round,
+	Close_round,
+	Dollar,
+	Equal_assign,
+	End_cmd
+}				t_tokentype;
 
 typedef struct	s_token
 {
+	t_tokentype		type;
 	char			*data;
 	struct s_token	*next;
 }				t_token;
@@ -49,14 +64,16 @@ typedef struct	s_cmd
 void			print_token(t_token *list);
 void			free_token(t_token *list);
 t_token			*init_token(char *insert);
-int				add_token(t_token *list, char *item, int size);
+int				add_token(t_token *list, char *item, char first, int size);
 void			lst_push_back(t_token *list, t_token *new_token);
 void			free_token(t_token *list);
+t_tokentype		get_type(char c);	
 int				check_special_char(char c);
 void			print_cmd(t_cmd *list);
 t_cmd			*init_cmd(char **insert);
 void			free_cmd(t_cmd *list);
 int				is_space(char c);
+int				is_text(char c);
 int				lexing(char *buf, t_token *token);
 void			free_buf(char **buffer);
 void			free_tab(char **tab);
