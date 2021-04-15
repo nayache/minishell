@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 17:11:51 by nayache           #+#    #+#             */
-/*   Updated: 2021/03/26 20:21:13 by nayache          ###   ########.fr       */
+/*   Updated: 2021/04/15 18:35:48 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,30 +23,40 @@
 # include <sys/wait.h>
 # include "libft/libft.h"
 
-# define QUOTE 39
-# define DQUOTE 34
+# define BACKSLASH '\\'
+# define QUOTE '\''
+# define DQUOTE '"'
 # define DIRIN '<'
 # define DIROUT '>'
 # define PIPE '|'
 # define OPEN_ROUND '('
 # define CLOSE_ROUND ')'
 # define DOLLAR '$'
+# define QUEST '?'
 # define EQUAL_ASSIGN '='
 # define END_CMD ';'
 
 typedef enum	e_tokentype
 {
 	Text,
-	Literally,
+	Whitespace,
 	Dirin,
 	Dirout,
 	Pipe,
-	Open_round,
-	Close_round,
-	Dollar,
-	Equal_assign,
-	End_cmd
+	End_cmd,
+	Escape,
+	Quote_text,
+	Dquote_text
 }				t_tokentype;
+
+typedef	enum	e_state
+{
+	START,
+	EAT,
+	INPUT,
+	OUTPUT,
+	ERROR
+}				t_state;
 
 typedef struct	s_token
 {
@@ -75,9 +85,11 @@ void			free_cmd(t_cmd *list);
 int				is_space(char c);
 int				is_text(char c);
 int				lexing(char *buf, t_token *token);
+int				manage_backslash(t_token *token);
 void			free_buf(char **buffer);
 void			free_tab(char **tab);
 int				tablen(char **tab);
 void			print_tab(char **tab);
 char			**ft_tabdup(char **src);
+int				parsing(t_token *token);
 #endif

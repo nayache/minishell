@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 14:56:05 by nayache           #+#    #+#             */
-/*   Updated: 2021/03/26 20:21:29 by nayache          ###   ########.fr       */
+/*   Updated: 2021/04/15 17:00:22 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 
 void	print_token(t_token *list)
 {
-	const char	type[10][15] = {"Text", "Literally",
-		"Dirin", "Dirout", "Pipe", "Open_round", "Close_round", "Dollar",
-		"Equal_assign", "End_cmd"};
+	const char	type[9][15] = {"Text", "Whitespace", "Dirin", "Dirout",
+		"Pipe", "End_cmd", "Escape", "Quote_text", "Dquote_text"};
 	
 	ft_putstr("----------------------print-token---------------------------\n");
 	if (list->data == NULL)

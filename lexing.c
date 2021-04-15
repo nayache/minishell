@@ -6,28 +6,11 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 18:42:19 by nayache           #+#    #+#             */
-/*   Updated: 2021/03/26 20:28:08 by nayache          ###   ########.fr       */
+/*   Updated: 2021/04/13 18:41:35 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static void	delete_start_space(char *str)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (is_space(str[i]) == 1)
-		i++;
-	j = 0;
-	while (str[i] != '\0')
-	{
-		str[j] = str[i++];
-		j++;
-	}
-	str[j] = '\0';
-}
 
 static int	get_size_occur(char *str)
 {
@@ -47,7 +30,7 @@ static int	get_size_occur(char *str)
 	else if (is_text(*str) == 1)
 	{
 		str++;
-		while (*str != '\0' && is_text(*str))
+		while (*str != '\0' && is_text(*str) && *str != BACKSLASH)
 		{
 			str++;
 			size++;
@@ -62,7 +45,16 @@ static int	index_quote(char *str, char quote)
 
 	i = 1;
 	while (str[i] != '\0' && str[i] != quote)
+	{
+		if (quote == DQUOTE && str[i] == BACKSLASH)
+		{
+			if (str[i + 1] == BACKSLASH)
+				i++;
+			else if (str[i + 1] == DQUOTE || str[i + 1] == QUOTE)
+				i++;
+		}
 		i++;
+	}
 	if (str[i] == '\0')
 		return (-1);
 	return (i - 1);
@@ -83,24 +75,44 @@ static int	lexing_quote(t_token *token, char *buf)
 	return (size + 2);
 }
 
-int			lexing(char *buf, t_token *token)
+static int	tokenizer(char *buf, t_token *token)
 {
 	int	size;
 
-	delete_start_space(buf);
-	while (*buf != '\0')
+	if (*buf == BACKSLASH)
 	{
-		if (*buf == QUOTE || *buf == DQUOTE)
+		if (*buf == BACKSLASH && *(buf + 1) == '\0')
 		{
-			if ((size = lexing_quote(token, buf)) == -1)
-				return (-1);
+			printf("Syntax error: `\\` expected character\n");
+			return (-1);
 		}
-		else
-			size = get_size_occur(buf);
-		if (is_space(*buf) == 0 && *buf != QUOTE && *buf != DQUOTE)
-			if (add_token(token, buf, *buf, size) == -1)
-				return (-1);
-		buf += size;
+		size = 2;
 	}
-	return (0);
+	else if (*buf == QUOTE || *buf == DQUOTE)
+	{
+		if ((size = lexing_quote(token, buf)) == -1)
+			return (-1);
+	}
+	else
+		size = get_size_occur(buf);
+	if (*buf != QUOTE && *buf != DQUOTE)
+		if (add_token(token, buf, *buf, size) == -1)
+			return (-1);
+	return (size);
+}
+
+int			lexing(char *buf, t_token *token)
+{
+	int		size;
+
+	if (*buf == '\0')
+	{
+		if (manage_backslash(token) == -1)
+			return (-1);
+		return (0);
+	}
+	else
+		if ((size = tokenizer(buf, token)) == -1)
+			return (-1);
+	return (lexing(buf + size, token));
 }

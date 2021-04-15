@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 14:46:55 by nayache           #+#    #+#             */
-/*   Updated: 2021/03/26 20:22:07 by nayache          ###   ########.fr       */
+/*   Updated: 2021/04/13 18:31:51 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,6 @@ static t_tokentype	search_type(char c)
 		return (Dirout);
 	if (c == PIPE)
 		return (Pipe);
-	if (c == OPEN_ROUND)
-		return (Open_round);
-	if (c == CLOSE_ROUND)
-		return (Close_round);
-	if (c == DOLLAR)
-		return (Dollar);
-	if (c == EQUAL_ASSIGN)
-		return (Equal_assign);
 	if (c == END_CMD)
 		return (End_cmd);
 }
@@ -37,7 +29,13 @@ t_tokentype			get_type(char c)
 	if (check_special_char(c) == 1)
 		return (search_type(c));
 	else if (c == QUOTE)
-		return (Literally);
+		return (Quote_text);
+	else if (c == DQUOTE)
+		return (Dquote_text);
+	else if (c == BACKSLASH)
+		return (Escape);
+	else if (is_space(c) == 1)
+		return (Whitespace);
 	else
 		return (Text);
 }

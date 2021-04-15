@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 17:11:30 by nayache           #+#    #+#             */
-/*   Updated: 2021/03/25 13:57:36 by nayache          ###   ########.fr       */
+/*   Updated: 2021/04/15 18:36:23 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,10 @@ static void	error(void)
 		perror("\e[1;4;31mERROR\e[0;38m");
 }
 
-int			parsing(t_token *token, t_cmd *cmd)
-{
-	return (0);	
-}
-
 static int	engine(char **buffer, t_token *token, char **env)
 {
-	t_cmd *cmd;
+	t_cmd	*cmd;
+	int		ret;
 
 	if (ft_strcmp(*buffer, "exit") == 0)
 	{
@@ -33,18 +29,13 @@ static int	engine(char **buffer, t_token *token, char **env)
 		free_token(token);
 		exit(EXIT_SUCCESS);
 	}
-	//lexer
 	if (lexing(*buffer, token) == -1)
 		return (-1);
-	free_buf(buffer);
+//	free_buf(buffer);      en cas d'exit plus loin.
+	if ((ret = parsing(token)) != 0)
+		return (-1);
 	if ((cmd = init_cmd(NULL)) == NULL)
 		return (-1);
-	// parser
-	if (parsing(token, cmd) == -1)
-	{
-		free_cmd(cmd);
-		return (-1);
-	}
 	free_cmd(cmd);
 	return (0);
 }
