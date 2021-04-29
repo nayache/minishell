@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 11:25:39 by nayache           #+#    #+#             */
-/*   Updated: 2021/03/25 11:25:43 by nayache          ###   ########.fr       */
+/*   Updated: 2021/04/29 13:56:05 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int		tablen(char **tab)
 	return (i);
 }
 
-char	**ft_tabdup(char **src)
+char	**ft_tabndup(char **src, int n)
 {
 	char	**tab;
 	int		size;
@@ -45,7 +45,7 @@ char	**ft_tabdup(char **src)
 	if (src == NULL)
 		return (NULL);
 	size = tablen(src);
-	if ((tab = (char **)malloc(sizeof(char *) * (size + 1))) == NULL)
+	if ((tab = (char **)malloc(sizeof(char *) * (size + n + 1))) == NULL)
 		return (NULL);
 	i = 0;
 	while (src[i] != NULL)
@@ -66,7 +66,9 @@ void	print_tab(char **tab)
 	while (*tab != NULL)
 	{
 		ft_putstr(*tab);
-		ft_putchar('\n');
-			tab++;
+		if (*(tab + 1) != NULL)
+			ft_putchar(' ');
+		tab++;
 	}
+	ft_putchar('\n');
 }

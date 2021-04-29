@@ -6,13 +6,13 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 18:33:26 by nayache           #+#    #+#             */
-/*   Updated: 2021/04/15 18:35:47 by nayache          ###   ########.fr       */
+/*   Updated: 2021/04/29 09:20:10 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	adjust_type_value(t_tokentype type)
+int			adjust_type(t_tokentype type)
 {
 	if (type == Dquote_text || type == Quote_text || type == Escape)
 		return (Text);
@@ -30,7 +30,7 @@ static int  state_machine(t_state state, t_tokentype type)
 		{EAT, EAT, ERROR, ERROR, ERROR, ERROR},
 		{EAT, EAT, ERROR, INPUT, ERROR, ERROR},
 	};
-	type = adjust_type_value(type);
+	type = adjust_type(type);
 	return (machine[state][type]);
 }
 

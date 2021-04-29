@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 11:32:13 by nayache           #+#    #+#             */
-/*   Updated: 2021/03/25 11:50:15 by nayache          ###   ########.fr       */
+/*   Updated: 2021/04/28 18:15:19 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,19 +36,17 @@ void	print_cmd(t_cmd *list)
 	ft_putstr("------------------------------------------------------------\n");
 }
 
-t_cmd	*init_cmd(char **insert)
+t_btree		*init_node(void)
 {
-	t_cmd *cmd;
+	t_btree *node;
 	
-	if ((cmd = (t_cmd *)malloc(sizeof(t_cmd))) == NULL)
+	if ((node = (t_btree *)malloc(sizeof(t_btree))) == NULL)
 		return (NULL);
-	if (insert == NULL)
-		cmd->argv = NULL;
-	else
-		if ((cmd->argv = ft_tabdup(insert)) == NULL)
-			return (NULL);
-	cmd->next = NULL;
-	return (cmd);
+	node->argv = NULL;
+	node->left = NULL;
+	node->right = NULL;
+	node->flux = NULL;
+	return (node);
 }
 
 void	free_cmd(t_cmd *list)

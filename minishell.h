@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 17:11:51 by nayache           #+#    #+#             */
-/*   Updated: 2021/04/15 18:35:48 by nayache          ###   ########.fr       */
+/*   Updated: 2021/04/29 13:46:36 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,14 @@ typedef struct	s_cmd
 	struct s_cmd	*next;
 }				t_cmd;
 
+typedef	struct	s_btree
+{
+	struct s_btree	*left;
+	struct s_btree	*right;
+	char			**argv;
+	char			*flux;
+}				t_btree;
+
 void			print_token(t_token *list);
 void			free_token(t_token *list);
 t_token			*init_token(char *insert);
@@ -80,16 +88,22 @@ void			free_token(t_token *list);
 t_tokentype		get_type(char c);	
 int				check_special_char(char c);
 void			print_cmd(t_cmd *list);
-t_cmd			*init_cmd(char **insert);
+t_btree			*init_node(void);
 void			free_cmd(t_cmd *list);
 int				is_space(char c);
 int				is_text(char c);
+int				is_empty_str(char *str);
+int				is_operator(t_tokentype type);
 int				lexing(char *buf, t_token *token);
 int				manage_backslash(t_token *token);
 void			free_buf(char **buffer);
 void			free_tab(char **tab);
+void			free_btree(t_btree *tree);
 int				tablen(char **tab);
 void			print_tab(char **tab);
-char			**ft_tabdup(char **src);
+char			**ft_tabndup(char **src, int n);
 int				parsing(t_token *token);
+int				adjust_type(t_tokentype type);
+char			**build_argv(char **argv, t_token *token, t_tokentype old_type);
+t_btree			*build_btree(t_btree *btree, t_token *token);
 #endif
