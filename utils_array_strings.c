@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 11:25:39 by nayache           #+#    #+#             */
-/*   Updated: 2021/04/29 13:56:05 by nayache          ###   ########.fr       */
+/*   Updated: 2021/05/03 09:35:25 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,9 @@ void	print_tab(char **tab)
 	while (*tab != NULL)
 	{
 		ft_putstr(*tab);
-		if (*(tab + 1) != NULL)
-			ft_putchar(' ');
+		//if (*(tab + 1) != NULL)
+		//	ft_putchar(' ');
 		tab++;
 	}
-	ft_putchar('\n');
+	//ft_putchar('\n');
 }

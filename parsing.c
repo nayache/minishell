@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 18:33:26 by nayache           #+#    #+#             */
-/*   Updated: 2021/04/29 09:20:10 by nayache          ###   ########.fr       */
+/*   Updated: 2021/05/03 12:13:06 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,23 +36,24 @@ static int  state_machine(t_state state, t_tokentype type)
 
 static void	print_syntax_error(t_tokentype old_type, t_tokentype type)
 {
+	ft_putstr_fd("minishell : ", 2);
 	if (type == Dirin)
-			printf("syntax error : near unexpected token `<'\n");
+			ft_putstr_fd("syntax error : near unexpected token `<'\n", 2);
 	if (type == Dirout)
-			printf("syntax error : near unexpected token `>'\n");
+			ft_putstr_fd("syntax error : near unexpected token `>'\n", 2);
 	if (type == Pipe)
 	{
 		if (old_type == type)	
-			printf("syntax error : near unexpected token `||'\n");
+			ft_putstr_fd("syntax error : near unexpected token `||'\n", 2);
 		else
-			printf("syntax error : near unexpected token `|'\n");
+			ft_putstr_fd("syntax error : near unexpected token `|'\n", 2);
 	}
 	if (type == End_cmd)
 	{
 		if (old_type == type)
-			printf("syntax error : near unexpected token `;;'\n");
+			ft_putstr_fd("syntax error : near unexpected token `;;'\n", 2);
 		else
-			printf("syntax error : near unexpected token `;'\n");
+			ft_putstr_fd("syntax error : near unexpected token `;'\n", 2);
 	}
 }
 

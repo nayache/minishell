@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 18:42:19 by nayache           #+#    #+#             */
-/*   Updated: 2021/04/15 18:49:34 by nayache          ###   ########.fr       */
+/*   Updated: 2021/05/03 12:16:43 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static int	lexing_quote(t_token *token, char *buf)
 
 	if ((size = index_quote(buf, *buf)) == -1)
 	{
-		printf("syntax error: expected quote %c or %c\n", 39, 34);
+		ft_putstr_fd("minishell: syntax error: expected quote \' or \"\n", 2);
 		return (-1);
 	}
 	if (size > 0)
@@ -83,7 +83,7 @@ static int	tokenizer(char *buf, t_token *token)
 	{
 		if (*buf == BACKSLASH && *(buf + 1) == '\0')
 		{
-			printf("Syntax error: `\\` expected character\n");
+			ft_putstr_fd("minishell: syntax error: `\\`\n", 2);
 			return (-1);
 		}
 		size = 2;

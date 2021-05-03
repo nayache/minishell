@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/29 12:58:01 by nayache           #+#    #+#             */
-/*   Updated: 2021/04/29 13:46:20 by nayache          ###   ########.fr       */
+/*   Updated: 2021/05/03 14:25:40 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,15 @@ int		is_space(char c)
 	if (c == '\r' || c == '\v' || c == '\f')
 		return (1);
 	if (c == '\n' || c == '\t' || c == ' ')
+		return (1);
+	return (0);
+}
+
+int		is_alpha(char c)
+{
+	if (c >= 'a' && c <= 'z')
+		return (1);
+	if (c >= 'A' && c <= 'Z')
 		return (1);
 	return (0);
 }

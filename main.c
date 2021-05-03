@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+/* ************************************************************************** *
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
@@ -6,66 +6,76 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 17:11:30 by nayache           #+#    #+#             */
-/*   Updated: 2021/04/29 14:36:38 by nayache          ###   ########.fr       */
+/*   Updated: 2021/05/03 15:01:45 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	error(void)
+void			error(void)
 {
 	if (errno != 0)
-		perror("\e[1;4;31mERROR\e[0;38m");
+		perror(NULL);
 }
 
-static t_btree	*engine(char **buffer, t_token *token, t_btree *cmd, char **env)
-{
-	if (ft_strcmp(*buffer, "exit") == 0)
-	{
-		free(*buffer);
-		free_token(token);
-		exit(EXIT_SUCCESS);
-	}
-	if (**buffer == '\0')
-		return (NULL);
-	if (lexing(*buffer, token) == -1)
-		return (NULL);
-	//	free_buf(buffer);      en cas d'exit plus loin.
-	if (parsing(token) == -1)
-		return (NULL);
-	if ((cmd = init_node()) == NULL || (cmd = build_btree(cmd, token)) == NULL)
-		return (NULL);
-	return (cmd);
-}
-
-void	print_btree(t_btree *tree)
+void			print_preorder(t_btree *tree)
 {
 	if (tree == NULL)
 		return;
 	if (tree->flux != NULL)
-	{
-		printf("\e[1;32mLeft : \e[0;38m\e[31m(%s)\e[0;38m  ", tree->flux);
-	}
+		printf("%s\n", tree->flux);
 	else
 	{
-		printf("\e[1;32mNode :\e[0;38m\n\n");
-		ft_putstr("            ");
 		print_tab(tree->argv);
-		ft_putstr("\n");
+		ft_putchar('\n');
 	}
 	if (tree->left != NULL)
-		print_btree(tree->left);
+	{
+		printf("\e[32m-----\e[0;38m\n");
+		print_preorder(tree->left);
+	}
 	if (tree->right != NULL)
-		print_btree(tree->right);
+	{
+		printf("\e[31m-----\e[0;38m\n");
+		print_preorder(tree->right);
+	}
 }
 
-int		main(int ac, char **av, char **env)
+static t_btree	*engine(char *buf, t_btree *cmd)
+{
+	t_token *token;
+
+	if (*buf == '\0' || (token = init_token(NULL)) == NULL)
+		return (NULL);
+	if (lexing(buf, token) == -1 || parsing(token) == -1)
+	{
+		free(buf);
+		free_token(token);
+		return (NULL);
+	}
+	free(buf);
+	//print_token(token);
+	if ((cmd = init_node()) == NULL || (cmd = build_btree(cmd, token)) == NULL)
+	{
+		free_token(token);
+		return (NULL);
+	}
+	free_token(token);
+	return (cmd);
+}
+
+int				main(int ac, char **av, char **envp)
 {
 	const char	prompt[46] = "\e[1;3;40mMINISHELL\e[5;38m-\e[0;1;40m$\e[0;38m ";
 	char		*buffer;
-	t_token		*token;
 	t_btree		*cmd;
+	t_env		*env;
 
+	if ((env = init_env()) == NULL || copy_env(envp, env) == -1)
+	{
+		error();
+		return (EXIT_FAILURE);
+	}
 	while (1)
 	{
 		ft_putstr((char *)prompt);
@@ -74,15 +84,10 @@ int		main(int ac, char **av, char **env)
 			error();
 			return (EXIT_FAILURE);
 		}
-		if (!(token = init_token(NULL)) || (cmd = engine(&buffer, token, cmd, env)) == NULL)
+		if ((cmd = engine(buffer, cmd)) == NULL)
 			error();
 		else
-		{
-			//print_token(token);
-			print_btree(cmd);
-		}
-		free_buf(&buffer);
-		free_token(token);
+			preorder_process(cmd, cmd, env);
 		free_btree(cmd);
 	}
 	return (EXIT_SUCCESS);
