@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/15 18:33:26 by nayache           #+#    #+#             */
-/*   Updated: 2021/05/03 12:13:06 by nayache          ###   ########.fr       */
+/*   Updated: 2021/05/03 15:15:55 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int			adjust_type(t_tokentype type)
 {
 	if (type == Dquote_text || type == Quote_text || type == Escape)
 		return (Text);
-	if (type == PIPE)
+	if (type == Pipe)
 		return (Dirin);
 	return (type);
 }
