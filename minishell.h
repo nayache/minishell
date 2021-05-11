@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 17:11:51 by nayache           #+#    #+#             */
-/*   Updated: 2021/05/11 16:03:47 by nayache          ###   ########.fr       */
+/*   Updated: 2021/05/11 16:11:23 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,12 +65,6 @@ typedef struct	s_token
 	struct s_token	*prev;
 	struct s_token	*next;
 }				t_token;
-
-typedef struct	s_cmd
-{
-	char			**argv;
-	struct s_cmd	*next;
-}				t_cmd;
 
 typedef struct	s_env
 {
