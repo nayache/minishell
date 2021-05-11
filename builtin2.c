@@ -6,35 +6,35 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:52:18 by nayache           #+#    #+#             */
-/*   Updated: 2021/05/03 15:01:20 by nayache          ###   ########.fr       */
+/*   Updated: 2021/05/07 08:49:09 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void			print_env(t_env *env)
+void			print_env(t_env *env, int fd)
 {
 	while (env != NULL)
 	{
 		if (env->enabled == 1)
 		{
-			ft_putstr(env->var);
-			ft_putchar('=');
+			ft_putstr_fd(env->var, fd);
+			ft_putchar_fd('=', fd);
 			if (env->value != NULL)
-				ft_putstr(env->value);
-			ft_putchar('\n');
+				ft_putstr_fd(env->value, fd);
+			ft_putchar_fd('\n', fd);
 		}
 		env = env->next;
 	}
 }
 
-int			env_display(t_btree *head, char **argv, t_env *env)
+int			env_display(t_btree *head, char **argv, t_env *env, int fd)
 {
-	print_env(env);
+	print_env(env, fd);
 	return (0);
 }
 
-int			exit_shell(t_btree *head, char **argv, t_env *env)
+int			exit_shell(t_btree *head, char **argv, t_env *env, int fd)
 {
 	free_btree(head);
 	free_env(env);
@@ -75,7 +75,7 @@ static void	refresh_var(t_env *env)
 	}
 }
 
-int			cd(t_btree *head, char **argv, t_env *env)
+int			cd(t_btree *head, char **argv, t_env *env, int fd)
 {
 	t_env	*tmp;
 	char	*path;
@@ -97,8 +97,9 @@ int			cd(t_btree *head, char **argv, t_env *env)
 	if (chdir(path) == -1)
 	{
 		ft_putstr_fd("minishell: cd: ", 2);
-		error();
+		ft_putstr_fd("no such file or directory: ", 2);
 		ft_putstr_fd(path, 2);
+		ft_putchar('\n');
 		return (0);
 	}
 	refresh_var(env);

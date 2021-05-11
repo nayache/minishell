@@ -6,107 +6,104 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/29 12:54:05 by nayache           #+#    #+#             */
-/*   Updated: 2021/04/29 13:47:03 by nayache          ###   ########.fr       */
+/*   Updated: 2021/05/11 15:48:14 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int		remove_whitespace(t_btree *tree)
+t_btree			*build_cmd(t_token *token)
 {
-	t_btree *prev;
-	int		size;
+	t_btree		*new;
+	t_tokentype old_type;
 
-	while (tree != NULL)
-	{
-		if (tree->argv == NULL && tree->flux == NULL)
-		{
-			free(tree);
-			prev->right = NULL;
-			return (0);
-		}
-		size = tablen(tree->argv);
-		if (is_empty_str(tree->argv[size - 1]) == 1)
-		{
-			free(tree->argv[size - 1]);
-			tree->argv[size - 1] = NULL;
-		}
-		prev = tree;
-		tree = tree->right;
-	}
-	return (0);
-}
-
-static int		dissociate_operators(t_btree *tree)
-{
-	t_btree *new_node;
-
-	while (tree != NULL)
-	{
-		if (tree->flux != NULL)
-		{
-			if ((new_node = init_node()) == NULL)
-				return (-1);
-			new_node->argv = tree->argv;
-			tree->argv = NULL;
-			tree->left = new_node;
-		}
-		tree = tree->right;
-	}
-	return (0);
-}
-
-static t_btree	*add_node(t_btree *tree, t_token *token)
-{
-	t_btree *new_node;
-
-	if ((new_node = init_node()) == NULL)
+	if ((new = init_node()) == NULL)
 		return (NULL);
-	tree->right = new_node;
-	tree = tree->right;
-	if (token->type != End_cmd)
-		if ((tree->flux = ft_strdup(token->data)) == NULL)
-			return (NULL);
-	return (tree);
-}
-
-static t_btree	*build(t_btree *current, t_token *token, t_tokentype old_type)
-{
-	if (adjust_type(token->type) == Text || token->type == Whitespace)
+	while (token != NULL && is_operator(token->type) == 0)
 	{
-		if (!(token->type == Whitespace && is_operator(old_type)))
+		if (adjust_type(token->type) == Text)
 		{
-			current->argv = build_argv(current->argv, token, old_type);
-			if (current->argv == NULL)
+			new->argv = build_argv(new->argv, token, old_type);
+			if (new->argv == NULL)
 				return (NULL);
 		}
+		old_type = token->type;
+		token = token->next;
 	}
-	else if (token->type == Dirout && old_type == Dirout)
+	return (new);
+}
+
+t_btree			*build_operator(t_btree *current, char *operator)
+{
+	if (current->flux != NULL)
 	{
-		free(current->flux);
-		if ((current->flux = ft_strdup(">>")) == NULL)
+		current->left = init_node();
+		if (current->left == NULL)
 			return (NULL);
+		current = current->left;
 	}
-	else
-		if ((current = add_node(current, token)) == NULL)
+	if ((current->flux = ft_strdup(operator)) == NULL)
+		return (NULL);
+	return (current);
+}
+
+t_btree			*build_last_node(t_btree *head, t_btree *current, t_token *lst)
+{
+	if (current->flux == NULL)
+	{
+		if ((current = build_cmd(lst)) == NULL)
 			return (NULL);
+		free(head);
+		return (current);
+	}
+	if ((current->left = build_cmd(lst)) == NULL)
+		return (NULL);
+	return (head);
+}
+
+t_btree			*build(t_btree *current, t_token *token)
+{
+	t_btree *tmp;
+
+	if ((current = build_operator(current, token->data)) == NULL)
+		return (NULL);
+	if ((current->right = build_cmd(token->next)) == NULL)
+		return (NULL);
+	if (token->type == End_cmd)
+	{
+		tmp = current->right;
+		current->right = NULL;
+		tmp->flux = current->flux;
+		current->flux = NULL;
+		current->argv = tmp->argv;
+		tmp->argv = NULL;
+		current->left = tmp;
+		return (current->left);
+	}
 	return (current);
 }
 
 t_btree			*build_btree(t_btree *btree, t_token *token)
 {
 	t_btree		*current;
-	t_tokentype old_type;
 
 	current = btree;
-	while (token != NULL)
+	token = get_last_token(token);
+	while (token->prev != NULL)
 	{
-		if ((current = build(current, token, old_type)) == NULL)
-			return (NULL);
-		old_type = token->type;
-		token = token->next;
+		if (is_operator(token->type) == 1 && token->next != NULL)
+		{
+			current = build(current, token);
+			if (token->prev != NULL && *token->prev->data == '>')
+			{
+				free(current->flux);
+				if ((current->flux = ft_strdup(">>")) == NULL)
+					return (NULL);
+				token = token->prev;
+			}
+		}
+		token = token->prev;
 	}
-	if (remove_whitespace(btree) == -1 || dissociate_operators(btree) == -1)
-		return (NULL);
+	btree = build_last_node(btree, current, token);
 	return (btree);
 }

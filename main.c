@@ -1,4 +1,4 @@
-/* ************************************************************************** *
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 17:11:30 by nayache           #+#    #+#             */
-/*   Updated: 2021/05/03 15:01:45 by nayache          ###   ########.fr       */
+/*   Updated: 2021/05/11 16:03:11 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,31 @@ void			print_preorder(t_btree *tree)
 {
 	if (tree == NULL)
 		return;
+	
+
 	if (tree->flux != NULL)
 		printf("%s\n", tree->flux);
 	else
 	{
-		print_tab(tree->argv);
-		ft_putchar('\n');
-	}
-	if (tree->left != NULL)
-	{
-		printf("\e[32m-----\e[0;38m\n");
-		print_preorder(tree->left);
+		if (tree->argv == NULL)
+		{
+			printf("Node vide\n");
+		}
+		else
+		{
+			print_tab(tree->argv);
+			ft_putchar('\n');
+		}
 	}
 	if (tree->right != NULL)
 	{
-		printf("\e[31m-----\e[0;38m\n");
+		printf("\e[31m--R---\e[0;38m\n");
 		print_preorder(tree->right);
+	}
+	if (tree->left != NULL)
+	{
+		printf("\e[32m-L---\e[0;38m\n");
+		print_preorder(tree->left);
 	}
 }
 
@@ -46,7 +55,10 @@ static t_btree	*engine(char *buf, t_btree *cmd)
 	t_token *token;
 
 	if (*buf == '\0' || (token = init_token(NULL)) == NULL)
+	{
+		free(buf);
 		return (NULL);
+	}
 	if (lexing(buf, token) == -1 || parsing(token) == -1)
 	{
 		free(buf);
@@ -61,6 +73,7 @@ static t_btree	*engine(char *buf, t_btree *cmd)
 		return (NULL);
 	}
 	free_token(token);
+	//print_preorder(cmd);
 	return (cmd);
 }
 
@@ -84,10 +97,8 @@ int				main(int ac, char **av, char **envp)
 			error();
 			return (EXIT_FAILURE);
 		}
-		if ((cmd = engine(buffer, cmd)) == NULL)
-			error();
-		else
-			preorder_process(cmd, cmd, env);
+		if ((cmd = engine(buffer, cmd)) != NULL)
+			tree_process(cmd, cmd, env, STDOUT_FILENO);
 		free_btree(cmd);
 	}
 	return (EXIT_SUCCESS);

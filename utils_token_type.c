@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 14:46:55 by nayache           #+#    #+#             */
-/*   Updated: 2021/04/13 18:31:51 by nayache          ###   ########.fr       */
+/*   Updated: 2021/05/07 08:52:24 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ static t_tokentype	search_type(char c)
 		return (Dirout);
 	if (c == PIPE)
 		return (Pipe);
-	if (c == END_CMD)
-		return (End_cmd);
+	return (End_cmd);
 }
 
 t_tokentype			get_type(char c)

@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/24 14:56:05 by nayache           #+#    #+#             */
-/*   Updated: 2021/05/03 11:34:16 by nayache          ###   ########.fr       */
+/*   Updated: 2021/05/11 15:28:11 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void	print_token(t_token *list)
 		if (list->data != NULL)
 		{
 			printf("%s : [%s]\n", type[list->type], list->data);
+			//if (list->prev != NULL)
+			//	printf("prev %s : [%s]\n", type[list->prev->type], list->prev->data);
 		}
 		list = list->next;
 	}
@@ -44,6 +46,7 @@ t_token	*init_token(char *insert)
 		if ((token->data = ft_strdup(insert)) == NULL)
 			return (NULL);
 	}
+	token->prev = NULL;
 	token->next = NULL;
 	return (token);
 }
@@ -53,6 +56,14 @@ void	lst_push_back(t_token *list, t_token *new)
 	while (list->next != NULL)
 		list = list->next;
 	list->next = new;
+	new->prev = list;
+}
+
+t_token			*get_last_token(t_token *token)
+{
+	while (token->next != NULL)
+		token = token->next;
+	return (token);
 }
 
 int		add_token(t_token *list, char *item, char first, int size)
@@ -86,9 +97,7 @@ int		add_token(t_token *list, char *item, char first, int size)
 void	free_token(t_token *list)
 {
 	t_token *tmp;
-	t_token *head;
-
-	head = list;
+	
 	while (list != NULL)
 	{
 		if (list->data != NULL)
@@ -96,6 +105,6 @@ void	free_token(t_token *list)
 		tmp = list;
 		list = list->next;
 		free(tmp);
+		tmp = NULL;
 	}
-	head = NULL;
 }

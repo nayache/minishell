@@ -6,7 +6,7 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/22 17:11:51 by nayache           #+#    #+#             */
-/*   Updated: 2021/05/03 14:59:09 by nayache          ###   ########.fr       */
+/*   Updated: 2021/05/11 16:03:47 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef struct	s_token
 {
 	t_tokentype		type;
 	char			*data;
+	struct s_token	*prev;
 	struct s_token	*next;
 }				t_token;
 
@@ -85,6 +86,9 @@ typedef	struct	s_btree
 	struct s_btree	*right;
 	char			**argv;
 	char			*flux;
+	char			*result;
+	int				file;
+
 }				t_btree;
 
 void			error(void);
@@ -94,13 +98,14 @@ t_token			*init_token(char *insert);
 int				add_token(t_token *list, char *item, char first, int size);
 void			lst_push_back(t_token *list, t_token *new_token);
 void			free_token(t_token *list);
+t_token			*get_last_token(t_token *token);
 t_tokentype		get_type(char c);	
 int				check_special_char(char c);
 void			print_cmd(t_cmd *list);
 t_btree			*init_node(void);
 void			free_cmd(t_cmd *list);
 t_env			*init_env(void);
-void			print_env(t_env *env);
+void			print_env(t_env *env, int fd);
 void			free_env(t_env *env);
 void			push_back(t_env *head, t_env *root);
 int				copy_env(char **env, t_env *dst);
@@ -117,17 +122,18 @@ void			free_btree(t_btree *tree);
 int				tablen(char **tab);
 void			print_tab(char **tab);
 char			**ft_tabndup(char **src, int n);
+char			**ft_tabcat(char **src1, char **src2);
 int				parsing(t_token *token);
 int				adjust_type(t_tokentype type);
 char			**build_argv(char **argv, t_token *token, t_tokentype old_type);
 t_btree			*build_btree(t_btree *btree, t_token *token);
-int				env_display(t_btree *head, char **argv, t_env *env);
-int				exit_shell(t_btree *head, char **argv, t_env *env);
+int				env_display(t_btree *head, char **argv, t_env *env, int fd);
+int				exit_shell(t_btree *head, char **argv, t_env *env, int fd);
 t_env			*get_var(t_env *env, char *name);
-int				cd(t_btree *head, char **argv, t_env *env);
-int				export_var(t_btree *head, char **argv, t_env *env);
-int				unset(t_btree *head, char **argv, t_env *env);
-int				pwd(t_btree *head, char **argv, t_env *env);
-int				echo(t_btree *head, char **argv, t_env *env);
-int				preorder_process(t_btree *head, t_btree *cmd, t_env *env);
+int				cd(t_btree *head, char **argv, t_env *env, int fd);
+int				export_var(t_btree *head, char **argv, t_env *env, int fd);
+int				unset(t_btree *head, char **argv, t_env *env, int fd);
+int				pwd(t_btree *head, char **argv, t_env *env, int fd);
+int				echo(t_btree *head, char **argv, t_env *env, int fd);
+int				tree_process(t_btree *head, t_btree *cmd, t_env *env, int fd);
 #endif

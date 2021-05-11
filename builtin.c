@@ -6,14 +6,14 @@
 /*   By: nayache <nayache@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/03 14:49:49 by nayache           #+#    #+#             */
-/*   Updated: 2021/05/03 14:59:25 by nayache          ###   ########.fr       */
+/*   Updated: 2021/05/07 12:00:05 by nayache          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 
-int			echo(t_btree *head, char **argv, t_env *env)
+int			echo(t_btree *head, char **argv, t_env *env, int fd)
 {
 	int		new_line;
 
@@ -25,16 +25,18 @@ int			echo(t_btree *head, char **argv, t_env *env)
 	}
 	while (*argv != NULL)
 	{
-		ft_putstr(*argv);
+		ft_putstr_fd(*argv, fd);
 		argv++;
+		if (*argv != NULL)
+			ft_putchar_fd(' ', fd);
 	}
 	if (new_line == 1)
-		ft_putchar('\n');
+		ft_putchar_fd('\n', fd);
 	return (0);
 }
 
 
-int			pwd(t_btree *head, char **argv, t_env *env)
+int			pwd(t_btree *head, char **argv, t_env *env, int fd)
 {
 	char	buffer[20000];
 
@@ -46,8 +48,8 @@ int			pwd(t_btree *head, char **argv, t_env *env)
 	}
 	else
 	{
-		ft_putstr(buffer);
-		ft_putchar('\n');
+		ft_putstr_fd(buffer, fd);
+		ft_putchar_fd('\n', fd);
 	}
 	return (0);
 }
@@ -71,13 +73,13 @@ static int	add_var(t_env *env, char *arg)
 			return (-1);
 		if ((new->value = ft_strdup(tmp + 1)) == NULL)
 			return (-1);
+		*tmp = '=';
 	}
-	*tmp = '=';
 	push_back(env, new);
 	return (0);
 }
 
-int		export_var(t_btree *head, char **argv, t_env *env)
+int		export_var(t_btree *head, char **argv, t_env *env, int fd)
 {
 	while (*argv != NULL)
 	{
@@ -100,7 +102,7 @@ int		export_var(t_btree *head, char **argv, t_env *env)
 	return (0);
 }
 
-int		unset(t_btree *head, char **argv, t_env *env)
+int		unset(t_btree *head, char **argv, t_env *env, int fd)
 {
 	t_env	*tmp;
 
@@ -109,6 +111,7 @@ int		unset(t_btree *head, char **argv, t_env *env)
 		if ((tmp = get_var(env, *argv)) != NULL)
 		{
 			free(tmp->value);
+			tmp->value = NULL;
 			tmp->enabled = 0;
 		}
 		argv++;
